@@ -13,24 +13,29 @@ public class PlayerInput : MonoBehaviour
     public float jumpForce;
     public int jumpCounter;
     public bool isGrounded;
+    Vector3 movement;
     public GameObject playerPivot;
     public CinemachineVirtualCamera myVirtualCamera;
     private CinemachineImpulseSource myImpulseSource;
 
     public Transform attackSpawner;
 
+    public bool isAttacking;
+    int comboCounter;
+
     [Header("Instance")]
     public GameObject hitBox;
 
     [Header("Trail")]
     public TrailRenderer swordSlash;
-    
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         myImpulseSource = myVirtualCamera.GetComponent<CinemachineImpulseSource>();
+        isAttacking = false;
     }
 
     // Update is called once per frame
@@ -41,7 +46,7 @@ public class PlayerInput : MonoBehaviour
         anim.SetFloat("MovX", inputX);
         anim.SetFloat("MovZ", inputZ);
 
-        
+
 
         if (inputX == 0 && inputZ == 0)
         {
@@ -52,13 +57,23 @@ public class PlayerInput : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed * Time.deltaTime);
         }
 
-        Vector3 movement = new Vector3(inputX * Speed, rb.velocity.y,inputZ * Speed);
+        movement = new Vector3(inputX * Speed, rb.velocity.y, inputZ * Speed);
         movement = playerPivot.transform.rotation * movement;
 
-        rb.velocity = movement;
-        
+        if (!isAttacking)
+        {
+            rb.velocity = movement;
+            swordSlash.enabled = false;
 
-        if (Input.GetKeyDown(KeyCode.Space) && jumpCounter< 1)
+        }
+        else
+        {
+            rb.velocity = Vector3.zero;
+            swordSlash.enabled = true;
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Space) && jumpCounter < 1)
         {
             anim.SetTrigger("Jumping");
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
@@ -69,10 +84,15 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            swordSlash.enabled = true;
-            anim.SetTrigger("Slash");
+            if (!isAttacking)
+            {
+                isAttacking = true;
+            }
+            comboCounter += 1;
             transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed);
+            
         }
+        anim.SetInteger("ComboCounter", comboCounter);
     }
 
     private void OnCollisionEnter(Collision col)
@@ -85,10 +105,12 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    private void Attack()
+    private void EndCombo()
     {
-        myImpulseSource.GenerateImpulse(Vector3.right);
+        //myImpulseSource.GenerateImpulse(Vector3.right);
         Instantiate(hitBox, attackSpawner.position, transform.rotation);
-        swordSlash.enabled = false;
+        comboCounter = 0;
+        isAttacking = false;
     }
+
 }
