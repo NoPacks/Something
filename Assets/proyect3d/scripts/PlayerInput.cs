@@ -21,6 +21,9 @@ public class PlayerInput : MonoBehaviour
 
     [Header("Instance")]
     public GameObject hitBox;
+
+    [Header("Trail")]
+    public TrailRenderer swordSlash;
     
     // Start is called before the first frame update
     void Start()
@@ -66,8 +69,9 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed * Time.deltaTime);
+            swordSlash.enabled = true;
             anim.SetTrigger("Slash");
+            transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed);
         }
     }
 
@@ -85,6 +89,6 @@ public class PlayerInput : MonoBehaviour
     {
         myImpulseSource.GenerateImpulse(Vector3.right);
         Instantiate(hitBox, attackSpawner.position, transform.rotation);
-        Debug.Log("shake");
+        swordSlash.enabled = false;
     }
 }
