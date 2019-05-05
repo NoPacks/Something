@@ -818,7 +818,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1074603846}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: 2}
+  m_LocalPosition: {x: 0, y: 1.2, z: 1.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1343990093}
@@ -1264,13 +1264,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 5
-  jumpForce: 3
+  jumpForce: 5
   jumpCounter: 0
   isGrounded: 0
   playerPivot: {fileID: 502388848}
   myVirtualCamera: {fileID: 1148546686}
   attackSpawner: {fileID: 1074603847}
   isAttacking: 0
+  addedForce: 0
   hitBox: {fileID: 6777077244963396843, guid: 904e5be50ebd50f4e908e0b77d131976, type: 3}
   swordSlash: {fileID: 650683454}
 --- !u!1001 &1383681654

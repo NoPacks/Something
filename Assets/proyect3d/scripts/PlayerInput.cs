@@ -22,6 +22,7 @@ public class PlayerInput : MonoBehaviour
 
     public bool isAttacking;
     int comboCounter;
+    public bool addedForce;
 
     [Header("Instance")]
     public GameObject hitBox;
@@ -43,14 +44,18 @@ public class PlayerInput : MonoBehaviour
     {
         inputX = Input.GetAxis("Horizontal");
         inputZ = Input.GetAxis("Vertical");
+        
         anim.SetFloat("MovX", inputX);
         anim.SetFloat("MovZ", inputZ);
-
-
+        anim.SetBool("inCombo", isAttacking);
+        anim.SetInteger("ComboCounter", comboCounter);
 
         if (inputX == 0 && inputZ == 0)
         {
-            anim.SetBool("Static", true);
+            if (isGrounded)
+            {
+                anim.SetBool("Static", true);
+            }
         } else
         {
             anim.SetBool("Static", false);
@@ -62,19 +67,30 @@ public class PlayerInput : MonoBehaviour
 
         if (!isAttacking)
         {
+            inputX = Input.GetAxis("Horizontal");
+            inputZ = Input.GetAxis("Vertical");
             rb.velocity = movement;
             swordSlash.enabled = false;
 
         }
         else
         {
-            rb.velocity = Vector3.zero;
+            if (!anim.GetBool("isGrounded"))
+            {
+                rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y*Time.deltaTime, rb.velocity.z);
+            }
+            else
+            {
+                rb.velocity = Vector3.zero;
+            }
             swordSlash.enabled = true;
         }
 
 
         if (Input.GetKeyDown(KeyCode.Space) && jumpCounter < 1)
         {
+            comboCounter = 0;
+            isAttacking = false;
             anim.SetTrigger("Jumping");
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
             isGrounded = false;
@@ -89,10 +105,10 @@ public class PlayerInput : MonoBehaviour
                 isAttacking = true;
             }
             comboCounter += 1;
-            transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed);
-            
+            //transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed);
+            rb.AddForce(transform.forward * Speed);
         }
-        anim.SetInteger("ComboCounter", comboCounter);
+        //anim.SetInteger("ComboCounter", comboCounter);
     }
 
     private void OnCollisionEnter(Collision col)
@@ -105,12 +121,26 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    private void StartCombo()
+    {
+        isAttacking = true;
+    }
+
+    private void MidCombo()
+    {
+        comboCounter = 0;
+        Instantiate(hitBox, attackSpawner.position,attackSpawner.rotation);
+    }
+
     private void EndCombo()
     {
         //myImpulseSource.GenerateImpulse(Vector3.right);
-        Instantiate(hitBox, attackSpawner.position, transform.rotation);
-        comboCounter = 0;
         isAttacking = false;
     }
 
+    private void Finisher()
+    {
+        comboCounter = 0;
+        isAttacking = false;
+    }
 }
