@@ -42,8 +42,8 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        inputX = Input.GetAxis("Horizontal");
-        inputZ = Input.GetAxis("Vertical");
+        //inputX = Input.GetAxis("Horizontal");
+        //inputZ = Input.GetAxis("Vertical");
         
         anim.SetFloat("MovX", inputX);
         anim.SetFloat("MovZ", inputZ);
@@ -59,7 +59,10 @@ public class PlayerInput : MonoBehaviour
         } else
         {
             anim.SetBool("Static", false);
-            transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed * Time.deltaTime);
+            if (isGrounded)
+            {
+                transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed * Time.deltaTime);
+            }
         }
 
         movement = new Vector3(inputX * Speed, rb.velocity.y, inputZ * Speed);
@@ -67,14 +70,18 @@ public class PlayerInput : MonoBehaviour
 
         if (!isAttacking)
         {
-            inputX = Input.GetAxis("Horizontal");
-            inputZ = Input.GetAxis("Vertical");
+            if (anim.GetBool("isGrounded"))
+            {
+                inputX = Input.GetAxis("Horizontal");
+                inputZ = Input.GetAxis("Vertical");
+            }
             rb.velocity = movement;
             swordSlash.enabled = false;
 
         }
         else
         {
+            
             if (!anim.GetBool("isGrounded"))
             {
                 rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y*Time.deltaTime, rb.velocity.z);
@@ -106,7 +113,7 @@ public class PlayerInput : MonoBehaviour
             }
             comboCounter += 1;
             //transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed);
-            rb.AddForce(transform.forward * Speed);
+            
         }
         //anim.SetInteger("ComboCounter", comboCounter);
     }
@@ -129,7 +136,7 @@ public class PlayerInput : MonoBehaviour
     private void MidCombo()
     {
         comboCounter = 0;
-        Instantiate(hitBox, attackSpawner.position,attackSpawner.rotation);
+        Instantiate(hitBox, attackSpawner.position,new Quaternion(hitBox.transform.rotation.x,transform.rotation.y,hitBox.transform.rotation.z,hitBox.transform.rotation.w));
     }
 
     private void EndCombo()
@@ -138,9 +145,11 @@ public class PlayerInput : MonoBehaviour
         isAttacking = false;
     }
 
-    private void Finisher()
+    private void Finisher(int x)
     {
+        myImpulseSource.GenerateImpulse(Vector3.right);
         comboCounter = 0;
         isAttacking = false;
+        Debug.Log(x);
     }
 }
