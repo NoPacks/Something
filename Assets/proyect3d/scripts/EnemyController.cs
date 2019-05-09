@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour
     public Transform player;
     public float atractionForce;
     public int life;
+    public SkinnedMeshRenderer asd;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +33,7 @@ public class EnemyController : MonoBehaviour
         if (other.gameObject.tag == "Attack")
         {
             life -= 1;
+            //asd.material.color = Color.red;
         }
     }
 

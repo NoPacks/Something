@@ -111,7 +111,10 @@ public class PlayerInput : MonoBehaviour
             {
                 isAttacking = true;
             }
-            comboCounter += 1;
+            if (comboCounter < 3)
+            {
+                comboCounter += 1;
+            }
             //transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed);
             
         }
@@ -149,6 +152,7 @@ public class PlayerInput : MonoBehaviour
     {
         myImpulseSource.GenerateImpulse(Vector3.right);
         comboCounter = 0;
+        
         isAttacking = false;
         Debug.Log(x);
     }

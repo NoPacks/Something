@@ -778,6 +778,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  atractionForce: 0
+  life: 0
+  asd: {fileID: 5519785413825995472}
 --- !u!1 &3289639524407409312
 GameObject:
   m_ObjectHideFlags: 0
