@@ -8,6 +8,7 @@ TagManager:
   - Floor
   - Attack
   - Target
+  - Dead
   layers:
   - Default
   - TransparentFX

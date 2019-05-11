@@ -15,17 +15,22 @@ public class PlayerInput : MonoBehaviour
     public bool isGrounded;
     Vector3 movement;
     public GameObject playerPivot;
-    public CinemachineVirtualCamera myVirtualCamera;
-    private CinemachineImpulseSource myImpulseSource;
-
-    public Transform attackSpawner;
 
     public bool isAttacking;
     int comboCounter;
     public bool addedForce;
 
+    [Header("Sound")]
+    public AudioSource audioSource;
+    public AudioClip[] Sounds;
+
+    [Header ("CameraShake")]
+    public CinemachineVirtualCamera myVirtualCamera;
+    private CinemachineImpulseSource myImpulseSource;
+
     [Header("Instance")]
     public GameObject hitBox;
+    public Transform attackSpawner;
 
     [Header("Trail")]
     public TrailRenderer swordSlash;
@@ -35,6 +40,7 @@ public class PlayerInput : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+        //audioSource = GetComponent<AudioSource>();
         myImpulseSource = myVirtualCamera.GetComponent<CinemachineImpulseSource>();
         isAttacking = false;
     }
@@ -128,12 +134,25 @@ public class PlayerInput : MonoBehaviour
             jumpCounter = 0;
             isGrounded = true;
             anim.SetBool("isGrounded", true);
+        } else if (col.gameObject.tag == "Dead")
+        {
+            Die();
         }
     }
 
-    private void StartCombo()
+    private void Die()
     {
         isAttacking = true;
+        audioSource.PlayOneShot(Sounds[1]);
+        anim.SetTrigger("Die");
+        Destroy(this.gameObject, 3f);
+    }
+
+    #region ComboSection
+
+    private void StartCombo()
+    {
+        
     }
 
     private void MidCombo()
@@ -145,15 +164,20 @@ public class PlayerInput : MonoBehaviour
     private void EndCombo()
     {
         //myImpulseSource.GenerateImpulse(Vector3.right);
-        isAttacking = false;
+        if (comboCounter == 0)
+        {
+            isAttacking = false;
+        }
     }
 
     private void Finisher(int x)
     {
-        myImpulseSource.GenerateImpulse(Vector3.right);
+        //myImpulseSource.GenerateImpulse(Vector3.right);
         comboCounter = 0;
         
         isAttacking = false;
         Debug.Log(x);
     }
+
+    #endregion 
 }
