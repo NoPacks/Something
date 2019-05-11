@@ -17,6 +17,7 @@ public class NormalPlayer : MonoBehaviour
     public GameObject objetive;
     public bool movingTwds;
     public float dash;
+    public GameObject Line;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +46,7 @@ public class NormalPlayer : MonoBehaviour
             if (!aiming)
             {
                 aiming = true;
+                Line.SetActive(true);
             }
         }else
         {
@@ -53,6 +55,7 @@ public class NormalPlayer : MonoBehaviour
                 rb.velocity = movement;
             }
             aiming = false;
+            Line.SetActive(false);
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && jumpCounter < 1)

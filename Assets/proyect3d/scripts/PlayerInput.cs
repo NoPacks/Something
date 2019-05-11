@@ -5,6 +5,8 @@ using Cinemachine;
 
 public class PlayerInput : MonoBehaviour
 {
+
+    #region variables
     Animator anim;
     Rigidbody rb;
     float inputX;
@@ -18,7 +20,11 @@ public class PlayerInput : MonoBehaviour
 
     public bool isAttacking;
     int comboCounter;
-    public bool addedForce;
+
+    public bool isDead;
+
+    public SkinnedMeshRenderer sMRenderer_Player;
+    public SkinnedMeshRenderer sMRenderer_Sword;
 
     [Header("Sound")]
     public AudioSource audioSource;
@@ -35,70 +41,52 @@ public class PlayerInput : MonoBehaviour
     [Header("Trail")]
     public TrailRenderer swordSlash;
 
-    // Start is called before the first frame update
+    #endregion
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        //audioSource = GetComponent<AudioSource>();
         myImpulseSource = myVirtualCamera.GetComponent<CinemachineImpulseSource>();
         isAttacking = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //inputX = Input.GetAxis("Horizontal");
-        //inputZ = Input.GetAxis("Vertical");
-        
+        #region Animator
         anim.SetFloat("MovX", inputX);
         anim.SetFloat("MovZ", inputZ);
         anim.SetBool("inCombo", isAttacking);
         anim.SetInteger("ComboCounter", comboCounter);
-
-        if (inputX == 0 && inputZ == 0)
-        {
-            if (isGrounded)
-            {
-                anim.SetBool("Static", true);
-            }
-        } else
-        {
-            anim.SetBool("Static", false);
-            if (isGrounded)
-            {
-                transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed * Time.deltaTime);
-            }
-        }
+        anim.SetBool("isGrounded", isGrounded);
+        #endregion
 
         movement = new Vector3(inputX * Speed, rb.velocity.y, inputZ * Speed);
-        movement = playerPivot.transform.rotation * movement;
 
-        if (!isAttacking)
+        if (!isDead)
         {
-            if (anim.GetBool("isGrounded"))
+            if (isGrounded && !isAttacking)
             {
+                movement = playerPivot.transform.rotation * movement;
+                transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed * Time.deltaTime);
                 inputX = Input.GetAxis("Horizontal");
                 inputZ = Input.GetAxis("Vertical");
+                rb.velocity = movement;
+                swordSlash.enabled = false;
+                
             }
-            rb.velocity = movement;
-            swordSlash.enabled = false;
-
-        }
-        else
-        {
-            
-            if (!anim.GetBool("isGrounded"))
+            else if (isAttacking)
             {
-                rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y*Time.deltaTime, rb.velocity.z);
-            }
-            else
-            {
+                swordSlash.enabled = true;
                 rb.velocity = Vector3.zero;
+                if (!isGrounded)
+                {
+                    rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * Time.deltaTime, rb.velocity.z);
+                }
             }
-            swordSlash.enabled = true;
         }
 
+        #region MouseOrKeyDown
 
         if (Input.GetKeyDown(KeyCode.Space) && jumpCounter < 1)
         {
@@ -122,10 +110,17 @@ public class PlayerInput : MonoBehaviour
                 comboCounter += 1;
             }
             //transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed);
-            
         }
-        //anim.SetInteger("ComboCounter", comboCounter);
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Respawn();
+        }
+
+        #endregion
     }
+
+    #region Collisions
 
     private void OnCollisionEnter(Collision col)
     {
@@ -136,17 +131,40 @@ public class PlayerInput : MonoBehaviour
             anim.SetBool("isGrounded", true);
         } else if (col.gameObject.tag == "Dead")
         {
-            Die();
+            StartCoroutine(Die());
         }
     }
 
-    private void Die()
+    #endregion
+
+    #region Die&&Respawn
+    IEnumerator Die()
     {
-        isAttacking = true;
+        isDead = true;
         audioSource.PlayOneShot(Sounds[1]);
-        anim.SetTrigger("Die");
-        Destroy(this.gameObject, 3f);
+        Input.ResetInputAxes();
+        anim.SetTrigger("Dead");
+        yield return new WaitForSeconds(3f);
+        sMRenderer_Player.enabled = false;
+        sMRenderer_Sword.enabled = false;
     }
+
+    private void Respawn()
+    {
+        StopAllCoroutines();
+        inputX = 0;
+        inputZ = 0;
+        anim.SetTrigger("Respawn");
+        //transform.position = new Vector3(0, 0.3f, 0);
+        
+        transform.SetPositionAndRotation(new Vector3(0, 0.3f, 0), new Quaternion(0, 0, 0, 0));
+        rb.velocity = Vector3.zero;
+        sMRenderer_Player.enabled = true;
+        sMRenderer_Sword.enabled = true;
+        isDead = false;
+    }
+
+    #endregion
 
     #region ComboSection
 
