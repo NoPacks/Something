@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
+//using Cinemachine;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -24,15 +24,15 @@ public class PlayerInput : MonoBehaviour
     public bool isDead;
 
     public SkinnedMeshRenderer sMRenderer_Player;
-    public SkinnedMeshRenderer sMRenderer_Sword;
+    public MeshRenderer sMRenderer_Sword;
 
     [Header("Sound")]
     public AudioSource audioSource;
     public AudioClip[] Sounds;
 
     [Header ("CameraShake")]
-    public CinemachineVirtualCamera myVirtualCamera;
-    private CinemachineImpulseSource myImpulseSource;
+    //public CinemachineVirtualCamera myVirtualCamera;
+    //private CinemachineImpulseSource myImpulseSource;
 
     [Header("Instance")]
     public GameObject hitBox;
@@ -47,7 +47,7 @@ public class PlayerInput : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        myImpulseSource = myVirtualCamera.GetComponent<CinemachineImpulseSource>();
+        //myImpulseSource = myVirtualCamera.GetComponent<CinemachineImpulseSource>();
         isAttacking = false;
     }
 
@@ -141,7 +141,7 @@ public class PlayerInput : MonoBehaviour
     IEnumerator Die()
     {
         isDead = true;
-        audioSource.PlayOneShot(Sounds[1]);
+        audioSource.PlayOneShot(Sounds[0]);
         Input.ResetInputAxes();
         anim.SetTrigger("Dead");
         yield return new WaitForSeconds(3f);
@@ -198,4 +198,9 @@ public class PlayerInput : MonoBehaviour
     }
 
     #endregion 
+
+    private void Falling()
+    {
+        //rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * 2, rb.velocity.z);
+    }
 }
