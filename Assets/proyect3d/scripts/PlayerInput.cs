@@ -86,6 +86,11 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
+        if(rb.velocity.y < 0)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * 1.1f, rb.velocity.z);
+        }
+
         #region MouseOrKeyDown
 
         if (Input.GetKeyDown(KeyCode.Space) && jumpCounter < 1)
