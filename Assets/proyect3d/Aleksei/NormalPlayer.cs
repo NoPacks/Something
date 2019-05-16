@@ -12,12 +12,15 @@ public class NormalPlayer : MonoBehaviour
     bool isGrounded;
     public bool aiming;
     public float distanceRay;
-    public GameObject head,pivot;
+    public float distanceObj;
+    public GameObject head, pivot;
     Vector3 movement;
     public GameObject objetive;
     public bool movingTwds;
     public float dash;
     public GameObject Line;
+    public int StateType;
+    public MeshRenderer[] Eyes;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +31,7 @@ public class NormalPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
         inputX = Input.GetAxis("Horizontal");
         inputZ = Input.GetAxis("Vertical");
 
@@ -48,7 +51,8 @@ public class NormalPlayer : MonoBehaviour
                 aiming = true;
                 Line.SetActive(true);
             }
-        }else
+        }
+        else
         {
             if (!movingTwds)
             {
@@ -77,22 +81,39 @@ public class NormalPlayer : MonoBehaviour
     void Aiming()
     {
         RaycastHit hit;
-        Debug.DrawRay(head.transform.position, head.transform.forward*distanceRay);
         if (Physics.Raycast(head.transform.position, head.transform.forward, out hit, distanceRay))
         {
+            distanceObj = Vector3.Distance(head.transform.position, hit.transform.gameObject.transform.position);
+            Line.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0, 0, distanceObj));
             if (!movingTwds)
-            {
+            { 
                 if (hit.transform.tag == "Target")
                 {
                     objetive = hit.transform.gameObject;
+                    Line.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0, 0, distanceObj));
+                    #region robarPoder
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        StateType = objetive.GetComponent<EnemyType>().EnemyT;
+                        foreach (MeshRenderer a in Eyes)
+                        {
+                            a.GetComponent<MeshRenderer>().material.color = objetive.GetComponent<MeshRenderer>().material.color;
+                        }
+                    }
+                    #endregion
+                    #region movingTo
                     if (Input.GetMouseButtonDown(0))
                     {
-                        
+
                         rb.useGravity = false;
                         movingTwds = true;
                     }
+                    #endregion
                 }
             }
+        }else
+        {
+            Line.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0, 0, distanceRay));
         }
     }
 
@@ -113,6 +134,19 @@ public class NormalPlayer : MonoBehaviour
             rb.useGravity = true;
             movingTwds = false;
             objetive = null;
+        }
+    }
+
+    public void State()
+    {
+        switch (StateType)
+        {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
         }
     }
 }

@@ -163,6 +163,10 @@ MonoBehaviour:
   movingTwds: 0
   dash: 10
   Line: {fileID: 860729128}
+  StateType: 0
+  Eyes:
+  - {fileID: 1184980703}
+  - {fileID: 451826227}
 --- !u!54 &100765421
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -449,7 +453,7 @@ GameObject:
   - component: {fileID: 451826227}
   - component: {fileID: 451826226}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: Ojos2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -685,7 +689,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 860729128}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.046000004, z: 0.916}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 575937831}
@@ -799,7 +803,7 @@ GameObject:
   - component: {fileID: 1184980703}
   - component: {fileID: 1184980702}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Ojos1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -922,6 +926,7 @@ GameObject:
   - component: {fileID: 1321303392}
   - component: {fileID: 1321303391}
   - component: {fileID: 1321303390}
+  - component: {fileID: 1321303394}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Target
@@ -995,12 +1000,26 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1321303389}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.31, y: 5.49, z: 4.27}
+  m_LocalPosition: {x: -0.31, y: 0.83, z: 3.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1195628399}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1321303394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321303389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940705cbf322c5c4fab553e066e8511b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnemyT: 0
+  Eyes: []
 --- !u!1 &1369651732
 GameObject:
   m_ObjectHideFlags: 0
@@ -1013,6 +1032,7 @@ GameObject:
   - component: {fileID: 1369651735}
   - component: {fileID: 1369651734}
   - component: {fileID: 1369651733}
+  - component: {fileID: 1369651737}
   m_Layer: 0
   m_Name: Cube (2)
   m_TagString: Target
@@ -1086,12 +1106,26 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1369651732}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.08, y: 0.68, z: 4.27}
+  m_LocalPosition: {x: -3.08, y: 0.68, z: -1.946}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1195628399}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1369651737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369651732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940705cbf322c5c4fab553e066e8511b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnemyT: 0
+  Eyes: []
 --- !u!1 &1693140694
 GameObject:
   m_ObjectHideFlags: 0
@@ -1105,7 +1139,7 @@ GameObject:
   - component: {fileID: 1693140697}
   - component: {fileID: 1693140696}
   m_Layer: 0
-  m_Name: Cube (2)
+  m_Name: Nariz
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1245,6 +1279,7 @@ GameObject:
   - component: {fileID: 2051440095}
   - component: {fileID: 2051440094}
   - component: {fileID: 2051440093}
+  - component: {fileID: 2051440097}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Target
@@ -1318,12 +1353,26 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2051440092}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.21, y: 2.94, z: 4.27}
+  m_LocalPosition: {x: 2.06, y: 1.26, z: 2.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1195628399}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2051440097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2051440092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940705cbf322c5c4fab553e066e8511b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnemyT: 0
+  Eyes: []
 --- !u!1 &2062601285
 GameObject:
   m_ObjectHideFlags: 0
