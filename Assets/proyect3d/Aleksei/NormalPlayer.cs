@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NormalPlayer : MonoBehaviour
 {
+    #region Variables
     Rigidbody rb;
     private float inputX, inputY, inputZ;
     public float Speed;
@@ -21,27 +22,30 @@ public class NormalPlayer : MonoBehaviour
     public GameObject Line;
     public int StateType;
     public MeshRenderer[] Eyes;
-    // Start is called before the first frame update
+    #endregion
+
     void Start()
     {
         Cursor.visible = false;
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-
+        #region Movement
         inputX = Input.GetAxis("Horizontal");
         inputZ = Input.GetAxis("Vertical");
 
         movement = new Vector3(inputX * Speed, rb.velocity.y, inputZ * Speed);
         movement = pivot.transform.rotation * movement;
+        #endregion
 
         if (movingTwds)
         {
             transform.position = Vector3.MoveTowards(transform.position, objetive.transform.position, dash * Time.deltaTime);
         }
+
+        #region Inputs
 
         if (Input.GetMouseButton(1))
         {
@@ -67,8 +71,10 @@ public class NormalPlayer : MonoBehaviour
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
             isGrounded = false;
         }
+        #endregion
     }
 
+    #region Coallisons
     private void OnCollisionEnter(Collision col)
     {
         if (col.gameObject.tag == "Floor")
@@ -77,6 +83,17 @@ public class NormalPlayer : MonoBehaviour
             isGrounded = true;
         }
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.tag == "Target")
+        {
+            rb.useGravity = true;
+            movingTwds = false;
+            objetive = null;
+        }
+    }
+    #endregion
 
     void Aiming()
     {
@@ -114,26 +131,6 @@ public class NormalPlayer : MonoBehaviour
         }else
         {
             Line.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0, 0, distanceRay));
-        }
-    }
-
-    /*private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Target")
-        {
-            rb.useGravity = true;
-            movingTwds = false;
-            objetive = null;
-        }
-    }*/
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.tag == "Target")
-        {
-            rb.useGravity = true;
-            movingTwds = false;
-            objetive = null;
         }
     }
 
