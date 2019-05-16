@@ -6,7 +6,6 @@ public class EnemyType : MonoBehaviour
 {
     public int EnemyT;
     MeshRenderer mRenderer;
-    public MeshRenderer[] Eyes;
     
     void Start()
     {
