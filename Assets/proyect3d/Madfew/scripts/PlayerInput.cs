@@ -40,7 +40,13 @@ public class PlayerInput : MonoBehaviour
 
     [Header("Trail")]
     public TrailRenderer swordSlash;
+    
+    [Header("Raycast")]
+    public float distanceRay;
+    public GameObject objetive;
+    public int stateType;
 
+    public MeshRenderer[] changeColor;
     #endregion
 
     void Start()
@@ -60,36 +66,52 @@ public class PlayerInput : MonoBehaviour
         anim.SetInteger("ComboCounter", comboCounter);
         anim.SetBool("isGrounded", isGrounded);
         #endregion
-
+        Aiming();
+        #region Movement
         movement = new Vector3(inputX * Speed, rb.velocity.y, inputZ * Speed);
+        if(rb.velocity.y < 0)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * 1.1f, rb.velocity.z);
+        }
+        #endregion
 
+        #region MovementConditions
         if (!isDead)
         {
             if (isGrounded && !isAttacking)
             {
                 movement = playerPivot.transform.rotation * movement;
-                transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed * Time.deltaTime);
                 inputX = Input.GetAxis("Horizontal");
                 inputZ = Input.GetAxis("Vertical");
                 rb.velocity = movement;
                 swordSlash.enabled = false;
-                
+                if(inputX!=0 || inputZ != 0)
+                {
+                    transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed * Time.deltaTime);
+                }
             }
             else if (isAttacking)
             {
+                transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed * Time.deltaTime * 5);
                 swordSlash.enabled = true;
                 rb.velocity = Vector3.zero;
                 if (!isGrounded)
                 {
                     rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * Time.deltaTime, rb.velocity.z);
+                    
                 }
+            } else if (inputX == 0 && inputZ == 0)
+            {
+
+            }
+            else
+            {
+                transform.rotation = Quaternion.Lerp(transform.rotation, playerPivot.transform.rotation, Speed * Time.deltaTime);
             }
         }
 
-        if(rb.velocity.y < 0)
-        {
-            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * 1.1f, rb.velocity.z);
-        }
+
+        #endregion
 
         #region MouseOrKeyDown
 
@@ -123,6 +145,7 @@ public class PlayerInput : MonoBehaviour
         }
 
         #endregion
+
     }
 
     #region Collisions
@@ -204,8 +227,43 @@ public class PlayerInput : MonoBehaviour
 
     #endregion 
 
-    private void Falling()
+    void Aiming()
     {
-        //rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * 2, rb.velocity.z);
+        RaycastHit hit;
+        if (Physics.Raycast(playerPivot.transform.position, playerPivot.transform.forward, out hit, distanceRay))
+        {
+            //distanceObj = Vector3.Distance(playerPivot.transform.position, hit.transform.gameObject.transform.position);
+            //Line.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0, 0, distanceObj));
+            if (!isAttacking)
+            {
+                if (hit.transform.tag == "Enemy")
+                {
+                    objetive = hit.transform.gameObject;
+                    //Line.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0, 0, distanceObj));
+                    #region robarPoder
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        stateType = objetive.GetComponent<EnemyType>().EnemyT;
+                        foreach (MeshRenderer a in changeColor)
+                        {
+                            switch (stateType)
+                            {
+                                case 1: a.GetComponent<MeshRenderer>().material.color = Color.red;
+                                    break;
+                                case 2: a.GetComponent<MeshRenderer>().material.color = Color.blue;
+                                    break;
+                                case 3: a.GetComponent<MeshRenderer>().material.color = Color.green;
+                                    break;
+                            }
+                        }
+                    }
+                    #endregion
+                }
+            }
+        }
+        /*else
+        {
+            Line.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0, 0, distanceRay));
+        }*/
     }
 }

@@ -133,17 +133,4 @@ public class NormalPlayer : MonoBehaviour
             Line.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0, 0, distanceRay));
         }
     }
-
-    public void State()
-    {
-        switch (StateType)
-        {
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-        }
-    }
 }

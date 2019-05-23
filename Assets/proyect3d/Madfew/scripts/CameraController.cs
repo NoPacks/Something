@@ -40,7 +40,7 @@ public class CameraController : MonoBehaviour
         
         if (Physics.Linecast(transform.parent.position, DesiredCameraPos, out hit))
         {
-            if (hit.collider.tag != "Enemy")
+            if (hit.collider.tag != "Enemy" && hit.collider.tag != "Attack")
             {
                 Distance = Mathf.Clamp((hit.distance * 0.8f), Min, Max);
             }

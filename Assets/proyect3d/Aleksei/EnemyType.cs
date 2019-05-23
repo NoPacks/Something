@@ -10,12 +10,12 @@ public class EnemyType : MonoBehaviour
     void Start()
     {
         mRenderer = GetComponent<MeshRenderer>();
-        EnemyT = Random.Range(1, 4);
+        //EnemyT = Random.Range(1, 4);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        /*if (Input.GetKeyDown(KeyCode.C))
         {
             EnemyT = Random.Range(1, 4);
             
@@ -29,10 +29,10 @@ public class EnemyType : MonoBehaviour
                 break;
             case 3: PlantEnemyStats();
                 break;
-        }
+        }*/
     }
 
-    public void IceEnemyStats()
+    /*public void IceEnemyStats()
     {
         mRenderer.material.color = Color.blue;
     }
@@ -45,5 +45,5 @@ public class EnemyType : MonoBehaviour
     public void PlantEnemyStats()
     {
         mRenderer.material.color = Color.green;
-    }
+    }*/
 }
